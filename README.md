@@ -38,5 +38,5 @@ Certifique-se de ter o [Node.js](https://nodejs.org/) instalado em sua máquina.
 5. Se continuar dando problema utilize o seguinte comando:
 
    ```bash
-   npx expo start
+   npx expo start --tunnel
    ```

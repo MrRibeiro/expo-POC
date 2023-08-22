@@ -38,3 +38,15 @@ export interface ContentsType {
   comments: CommentType[];
   relevance: number;
 }
+
+export interface Comment {
+  id: number;
+  text: string;
+  replies: Comment[];
+}
+
+export interface CommentModalProps {
+  isVisible: boolean;
+  onClose: () => void;
+  comments: Comment[];
+}

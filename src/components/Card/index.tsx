@@ -15,7 +15,7 @@ import React from 'react';
 
 import { CardProps } from './types';
 
-export function Card({ content, onLike }: CardProps) {
+export function Card({ content, onLike, openModal }: CardProps) {
   return (
     <Box alignItems="center" key={content.id} pt={4}>
       <Box
@@ -88,6 +88,7 @@ export function Card({ content, onLike }: CardProps) {
                 }}
               />
               <IconButton
+                onPress={openModal}
                 borderRadius="full"
                 _icon={{
                   as: Ionicons,

@@ -19,7 +19,8 @@ import {
 } from 'native-base';
 import React, { useEffect, useState } from 'react';
 
-import { ContentsType, TypesContentsType } from './types';
+import { CommentModal } from './CommentModal';
+import { Comment, ContentsType, TypesContentsType } from './types';
 
 import { Card } from '@/components/Card';
 import { fetchContentsData } from '@/services/contents';
@@ -33,6 +34,42 @@ const typesContents: TypesContentsType[] = [
   { name: 'backend', value: 'BackEnd', pressed: false },
 ];
 
+//MOCK COMMENT
+const comments: Comment[] = [
+  {
+    id: 1,
+    text: 'Que incrível ver atletas de todo o mundo competindo no palco olímpico! As Olimpíadas sempre trazem à tona o melhor do espírito esportivo e da dedicação.',
+    replies: [
+      {
+        id: 2,
+        text: 'É uma inspiração testemunhar como o esporte pode unir nações e culturas diferentes em um único evento global.',
+        replies: [],
+      },
+      {
+        id: 3,
+        text: 'As Olimpíadas nos lembram da capacidade humana de superar limites e alcançar realizações extraordinárias.',
+        replies: [],
+      },
+    ],
+  },
+  {
+    id: 4,
+    text: 'Mal posso esperar para ver quais histórias emocionantes surgirão nesta edição das Olimpíadas e como esses atletas excepcionais nos inspirarão mais uma vez.',
+    replies: [
+      {
+        id: 5,
+        text: 'Que incrível ver atletas de todo o mundo competindo no palco olímpico! As Olimpíadas sempre trazem à tona o melhor do espírito esportivo e da dedicação. ',
+        replies: [],
+      },
+      {
+        id: 6,
+        text: 'É uma inspiração testemunhar como o esporte pode unir nações e culturas diferentes em um único evento global.',
+        replies: [],
+      },
+    ],
+  },
+];
+
 export function Home() {
   const toast = useToast();
   const [sortBy, setSortBy] = useState<'asc' | 'desc'>('asc');
@@ -41,6 +78,7 @@ export function Home() {
   const [buttonsType, setButtonsType] = useState(typesContents);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [loading, setLoading] = useState(true);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   const handleButtonPress = (buttonName: string) => {
     const updatedButtons = typesContents.map(button =>
@@ -123,8 +161,16 @@ export function Home() {
     setContents(updatedData);
   };
 
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
   const renderItem = ({ item }: { item: ContentsType }) => (
-    <Card content={item} onLike={handleLike} />
+    <Card content={item} onLike={handleLike} openModal={openModal} />
   );
 
   if (loading) {
@@ -178,6 +224,7 @@ export function Home() {
         />
       </Box>
 
+      {/* TODO - integrate with types contents */}
       <HStack mt="4">
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           <HStack space={4}>
@@ -227,6 +274,12 @@ export function Home() {
           keyExtractor={item => String(item.id)}
         />
       </VStack>
+
+      <CommentModal
+        isVisible={modalVisible}
+        onClose={closeModal}
+        comments={comments}
+      />
     </Box>
   );
 }

@@ -40,3 +40,5 @@ Certifique-se de ter o [Node.js](https://nodejs.org/) instalado em sua máquina.
    ```bash
    npx expo start --tunnel
    ```
+
+![Home Screnn](assets/homescreen.jpeg)

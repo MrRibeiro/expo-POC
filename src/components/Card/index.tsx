@@ -5,6 +5,7 @@ import {
   Center,
   HStack,
   Heading,
+  Icon,
   IconButton,
   Image,
   Stack,
@@ -14,8 +15,7 @@ import React from 'react';
 
 import { CardProps } from './types';
 
-export function Card({ content }: CardProps) {
-  console.log('CONTENT: ', content);
+export function Card({ content, onLike }: CardProps) {
   return (
     <Box alignItems="center" key={content.id} pt={4}>
       <Box
@@ -64,11 +64,18 @@ export function Card({ content }: CardProps) {
           <Text fontWeight="400">{content.description}</Text>
           <HStack alignItems="center" space={4} justifyContent="space-between">
             <HStack alignItems="center">
+              <Text>{content.likesCount}</Text>
               <IconButton
+                onPress={() => onLike(content.id)}
+                disabled={content.liked}
                 borderRadius="full"
+                icon={
+                  <Icon
+                    as={Ionicons}
+                    name={content.liked ? 'heart' : 'heart-outline'}
+                  />
+                }
                 _icon={{
-                  as: Ionicons,
-                  name: 'heart-outline',
                   color: 'violet.500',
                   size: 'md',
                 }}

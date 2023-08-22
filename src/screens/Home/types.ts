@@ -34,6 +34,7 @@ export interface ContentsType {
   title: string;
   description: string;
   likesCount: number;
+  liked?: boolean;
   comments: CommentType[];
   relevance: number;
 }

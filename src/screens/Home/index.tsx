@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   Box,
   Button,
+  Center,
   FlatList,
   Flex,
   HStack,
@@ -10,9 +11,11 @@ import {
   Input,
   Pressable,
   ScrollView,
+  Skeleton,
   Spacer,
   Text,
   VStack,
+  useToast,
 } from 'native-base';
 import React, { useEffect, useState } from 'react';
 
@@ -30,9 +33,8 @@ const typesContents: TypesContentsType[] = [
   { name: 'backend', value: 'BackEnd', pressed: false },
 ];
 
-const COUNT_CONTENTS: number = 20;
-
 export function Home() {
+  const toast = useToast();
   const [sortBy, setSortBy] = useState<'asc' | 'desc'>('asc');
   const [contents, setContents] = useState<ContentsType[]>([]);
   const [initialContents, setInitialContents] = useState<ContentsType[]>([]);
@@ -68,11 +70,14 @@ export function Home() {
         setLoading(false);
       } catch (error) {
         console.error('Error:', error);
+        toast.show({
+          description: `Error: ${error}`,
+        });
       }
     }
 
     fetchData();
-  }, []);
+  }, [toast]);
 
   const sortByRelevance = (a: ContentsType, b: ContentsType) => {
     if (sortBy === 'asc') {
@@ -102,12 +107,46 @@ export function Home() {
     setSearchQuery('');
   };
 
+  const handleLike = (id: string) => {
+    const updatedData = contents.map(item => {
+      if (item.id === id) {
+        console.log(item, item.likesCount + 1);
+        return {
+          ...item,
+          likesCount: item.likesCount + 1,
+          liked: true,
+        };
+      }
+      return item;
+    });
+
+    setContents(updatedData);
+  };
+
   const renderItem = ({ item }: { item: ContentsType }) => (
-    <Card content={item} />
+    <Card content={item} onLike={handleLike} />
   );
 
   if (loading) {
-    return <Text>Loading...</Text>;
+    // TODO - Adjusts Skeleton for equal structure
+    return (
+      <Center w="100%">
+        <VStack
+          w="90%"
+          maxW="400"
+          borderWidth="1"
+          space={8}
+          overflow="hidden"
+          rounded="md"
+          _light={{
+            borderColor: 'coolGray.200',
+          }}>
+          <Skeleton h="40" />
+          <Skeleton.Text px="4" />
+          <Skeleton px="4" my="4" rounded="md" startColor="primary.100" />
+        </VStack>
+      </Center>
+    );
   }
 
   return (
@@ -160,7 +199,7 @@ export function Home() {
 
       <Flex direction="row" mt="4">
         <Text fontSize={'xs'} bold>
-          {COUNT_CONTENTS} conteúdos
+          {contents.length} conteúdos
         </Text>
         <Spacer />
 
